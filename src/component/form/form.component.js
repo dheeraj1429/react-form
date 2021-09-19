@@ -10,7 +10,7 @@ function FormComponent() {
   });
 
   let name, value;
-  const getData = (e) => {
+  const changeHandler = (e) => {
     name = e.target.name;
     value = e.target.value;
 
@@ -19,32 +19,46 @@ function FormComponent() {
 
   const { firstName, lastName, email, number } = User;
 
-  const sendData = async (e) => {
+  const getData = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`https://fir-learn-fbcbc-default-rtdb.firebaseio.com/reactFrom.json`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        User,
-      }),
-    });
+    if (firstName && lastName && email && number) {
+      const res = await fetch(`https://fir-learn-fbcbc-default-rtdb.firebaseio.com/storeFromDemo.json`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          User,
+        }),
+      });
+
+      if (res) {
+        setUser({
+          firstName: "",
+          lastName: "",
+          email: "",
+          number: "",
+        });
+        alert("done");
+      }
+    } else {
+      alert("fill the data");
+    }
   };
 
   return (
     <div>
       <form method="POST">
-        <input type="text" name="firstName" placeholder="enter name" autoComplete="off" value={User.firstName} onChange={getData} required />
+        <input type="text" name="firstName" placeholder="enter name" value={User.firstName} onChange={changeHandler} autoComplete="off" required />
 
-        <input type="text" name="lastName" placeholder="enter lastname" autoComplete="off" value={User.lastName} onChange={getData} required />
+        <input type="text" name="lastName" placeholder="enter lastname" value={User.lastName} onChange={changeHandler} autoComplete="off" required />
 
-        <input type="email" name="email" placeholder="enter email" autoComplete="off" value={User.email} onChange={getData} required />
+        <input type="email" name="email" placeholder="enter email" value={User.email} onChange={changeHandler} autoComplete="off" required />
 
-        <input type="text" name="number" placeholder="Number" autoComplete="off" value={User.number} onChange={getData} required />
+        <input type="text" name="number" placeholder="Number" value={User.number} onChange={changeHandler} autoComplete="off" required />
 
-        <button type="submit" className="submiteButton" onClick={sendData}>
+        <button type="submit" className="submiteButton" onClick={getData}>
           submit
         </button>
       </form>
